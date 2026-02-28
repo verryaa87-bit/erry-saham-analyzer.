@@ -3,33 +3,39 @@ import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="CVMF Saham Checker - Verry", layout="wide")
-st.title("Hybrid CAN-VCP Momentum Filter (CVMF) untuk Saham IDX/US")
-st.markdown("**Input satu ticker** (contoh: BUMI.JK atau AAPL). Chart mungkin kosong karena yfinance issue .JK – cek manual di Yahoo/TradingView.")
+st.title("Hybrid CAN-VCP Stock Checker (IDX/US)")
 
-ticker = st.text_input("Ticker Saham", "BUMI.JK").strip().upper()
+ticker = st.text_input("Masukkan Ticker (contoh: BIPI.JK atau MPIX.JK)", "BIPI.JK")
 
 if ticker:
-    with st.spinner("Coba load data..."):
-        try:
-            data = yf.download(ticker, period="1y", progress=False)
-            if data.empty:
-                st.warning(f"Data kosong untuk {ticker}. Yahoo mungkin lagi rewel (khusus .JK sering).")
-                st.info(f"Cek manual chart di: https://finance.yahoo.com/quote/{ticker}/chart")
-                st.info("Coba ticker US seperti AAPL atau NVDA untuk test.")
-            else:
-                st.success(f"Data OK! {len(data)} hari tersedia.")
-                st.subheader(f"Chart Harga & SMA - {ticker}")
-                fig = go.Figure()
-                fig.add_trace(go.Candlestick(x=data.index, open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], name='Candlestick'))
-                fig.add_trace(go.Scatter(x=data.index, y=data['Close'].rolling(10).mean(), name='10 SMA', line=dict(color='lime', width=2)))
-                fig.add_trace(go.Scatter(x=data.index, y=data['Close'].rolling(20).mean(), name='20 SMA', line=dict(color='red', width=2)))
-                st.plotly_chart(fig, use_container_width=True)
-        except Exception as e:
-            st.error(f"Error: {e}. Coba refresh atau ticker lain. Issue yfinance umum untuk IDX.")
+    data = yf.download(ticker, period="1y")
+    if data.empty:
+        st.error("Data tidak ditemukan. Coba ticker lain (tambah .JK untuk IDX).")
+    else:
+        st.subheader("Harga & Chart")
+        fig = go.Figure()
+        fig.add_trace(go.Candlestick(x=data.index, open=data['Open'], high=data['High'], low=data['Low'], close=data['Close'], name='Price'))
+        fig.add_trace(go.Scatter(x=data.index, y=data['Close'].rolling(10).mean(), name='10 SMA', line=dict(color='green')))
+        fig.add_trace(go.Scatter(x=data.index, y=data['Close'].rolling(20).mean(), name='20 SMA', line=dict(color='red')))
+        st.plotly_chart(fig)
 
-# Checklist tetap (kode slider & checkbox sama seperti sebelumnya, copy dari app lama kalau perlu)
-st.subheader("Checklist CVMF (Manual)")
-# ... paste kode checklist di sini dari versi sebelumnya ...
-# Hitung score & tampil hasil
-**Update Feb 2026**: yfinance sering gagal load data .JK (IDX) karena issue Yahoo API (data stuck atau empty). Ini umum, bukan bug app. Solusi: Cek chart manual di Yahoo Finance, TradingView, atau Stockbit. Ticker US (AAPL, NVDA) biasanya OK untuk test.
+        # Simple CAN SLIM check (manual input atau approx)
+        st.subheader("Checklist Sederhana CAN-VCP")
+        col1, col2 = st.columns(2)
+        with col1:
+            eps_growth = st.slider("EPS Growth Q/Q (%)", -50, 100, 25)
+            annual_growth = st.slider("Annual EPS Growth (%)", 0, 100, 25)
+        with col2:
+            sma_respect = st.checkbox("Harga > 10 & 20 SMA?")
+            vcp_tight = st.checkbox("Ada pola VCP (kontraksi pullback makin kecil)?")
+        
+        score = 0
+        if eps_growth >= 25: score += 1
+        if annual_growth >= 25: score += 1
+        if sma_respect: score += 1
+        if vcp_tight: score += 1
+        
+        if score >= 3:
+            st.success(f"Score: {score}/4 → Potential Buy! (Watch breakout)")
+        else:
+            st.warning(f"Score: {score}/4 → Watch dulu atau skip")
