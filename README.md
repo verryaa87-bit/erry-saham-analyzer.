@@ -32,7 +32,11 @@ Nama lengkap: **Hybrid CAN-VCP Momentum Filter (CVMF)**
 Score 5-6 → **Strong Buy** 🚀  
 Score 3-4 → **Watchlist**  
 <3 → **Skip**
-
+**Catatan Penting (Feb 2026)**  
+- Chart harga & SMA kadang kosong / stuck karena library yfinance sedang bermasalah dengan ticker .JK (IDX). Ini issue umum, bukan bug app.  
+- Solusi: Cek chart manual di Yahoo Finance, TradingView, atau Stockbit.  
+- Ticker US (AAPL, NVDA, dll.) biasanya load normal untuk test.  
+- Update app nanti kalau yfinance fix atau ganti library alternatif.
 ## Dibuat Dengan
 - Python + Streamlit
 - yfinance (data saham)
