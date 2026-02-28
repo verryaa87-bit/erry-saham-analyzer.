@@ -1,30 +1,43 @@
+# CVMF Saham Analyzer
 
-# CVMF Saham Checker - Hybrid CAN SLIM + VCP Analyzer
+App sederhana untuk analisis saham IDX/US pakai hybrid strategi **CAN SLIM** (William O'Neil) + **VCP + SMA** (Mark Minervini style).
 
-App web sederhana untuk analisis saham IDX/US pakai strategi hybrid **CAN SLIM** (William O'Neil) + **VCP/SMA Trend Filter** (Mark Minervini style).  
-Cocok buat swing/position trading di bull market, fokus momentum growth stocks.
-
-![App Screenshot](https://via.placeholder.com/800x400?text=App+Screenshot+Contoh)  
-*(Ganti link gambar ini nanti kalau kamu upload screenshot app ke repo)*
+Nama lengkap: **Hybrid CAN-VCP Momentum Filter (CVMF)**
 
 ## Fitur Utama
-- Chart candlestick + 10 SMA (hijau) & 20 SMA (merah) dari yfinance.
-- Checklist manual CVMF: EPS growth, Annual growth, Relative Strength, Market uptrend, Harga respect SMA, Pola VCP.
-- Score otomatis: Strong Buy (5-6/6), Watchlist (3-4/6), Skip (<3/6).
-- Timeframe: Daily (1 tahun data).
+- Chart candlestick + 10 SMA (hijau) & 20 SMA (merah) dari yfinance
+- Checklist manual untuk 6 kriteria CVMF (EPS growth, RS, market trend, VCP, dll.)
+- Hitung score otomatis → Strong Buy / Watch / Skip
+- Cocok untuk swing/position trading growth stocks
 
 ## Cara Pakai
-1. Buka app live: [Link App Kamu](https://erry-saham-analyzer-jabntzeeuwfruakacrez.streamlit.app) *(ganti dengan link real app kamu)*
-2. Masukkan ticker (contoh: `BUMI.JK` untuk IDX, atau `AAPL` untuk US).
-3. Lihat chart (kalau load, kalau kosong cek Yahoo Finance manual karena yfinance kadang delay).
-4. Geser slider & centang checklist sesuai data real saham (dari Stockbit/Investing.com/Yahoo).
-5. Lihat hasil score & keputusan trading.
+1. Buka app live: [https://erry-saham-analyzer-xxx.streamlit.app](https://erry-saham-analyzer-jabntzeeuwfruakacrez.streamlit.app)  
+   (ganti link dengan URL asli app kamu setelah deploy)
+2. Masukkan **satu ticker** (contoh: `BUMI.JK`, `BBCA.JK`, `AAPL`)
+3. Lihat chart (kalau load) + geser slider & centang checklist sesuai data real saham
+4. Lihat hasil score di bawah → kalau 5-6/6 → setup kuat!
 
-**Catatan**: Chart mungkin kosong karena issue yfinance untuk .JK stocks (umum di 2025-2026). Cek manual chart di https://finance.yahoo.com/quote/[TICKER]/chart atau TradingView.
+**Catatan**: Chart kadang kosong karena issue yfinance untuk ticker .JK (IDX). Cek manual di Yahoo Finance atau TradingView.
 
-## Cara Install/Run Lokal (Opsional)
-```bash
-git clone https://github.com/verryaa87-bit/er ry-saham-analyzer.git
-cd er ry-saham-analyzer
-pip install -r requirements.txt
-streamlit run app.py
+## Kriteria CVMF (Ringkasan)
+| No | Kriteria              | Target Ideal          | Bobot |
+|----|-----------------------|-----------------------|-------|
+| 1  | EPS Growth Q/Q        | ≥25%                  | 1     |
+| 2  | Annual EPS Growth     | ≥25%                  | 1     |
+| 3  | Relative Strength     | ≥80%                  | 1     |
+| 4  | Market Uptrend        | Ya                    | 1     |
+| 5  | Harga > 10 & 20 SMA   | Ya                    | 1     |
+| 6  | Ada Pola VCP          | Ya (kontraksi ketat)  | 1     |
+
+Score 5-6 → **Strong Buy** 🚀  
+Score 3-4 → **Watchlist**  
+<3 → **Skip**
+
+## Dibuat Dengan
+- Python + Streamlit
+- yfinance (data saham)
+- Plotly (chart interaktif)
+
+Dibuat oleh verry (Surabaya, Feb 2026) – untuk pribadi & eksperimen trading.
+
+Happy analyzing saham, brow! 📈
